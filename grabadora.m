@@ -292,21 +292,63 @@ function Convolucion_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global r voz otra Fs t
-%promedio_voz = mean(Voz,2);
-%promedio_otra = mean(otra,2);
-%disp(size([1,2,3]));
-%disp(size(voz.'));
-convolucion = conv(voz, otra, 'full');
-%convolucion, = conv(, otra);
-%convolucion = conv(promedio_voz,promedio_otra);
-Fs=r.SampleRate;
-Ts=1/Fs;
-tam = length(convolucion);
-t=(0:tam-1)*Ts;
-stem(handles.modificada,t,convolucion);
-title(handles.modificada,'Audio Convolucion');
-xlabel(handles.modificada,'Tiempo (segundos)');
-ylabel(handles.modificada,'Amplitud');
-tiem=tam/Fs;
-FsD=tam/tiem;
-sound(convolucion,FsD);
+funcion = get(handles.funcion,'String');
+if isempty(funcion)
+    convolucion = conv(voz, otra, 'full');
+    Fs=r.SampleRate;
+    Ts=1/Fs;
+    tam = length(convolucion);
+    t=(0:tam-1)*Ts;
+    stem(handles.modificada,t,convolucion);
+    title(handles.modificada,'Audio Convolucion');
+    xlabel(handles.modificada,'Tiempo (segundos)');
+    ylabel(handles.modificada,'Amplitud');
+    tiem=tam/Fs;
+    FsD=tam/tiem;
+    sound(convolucion,FsD);
+else
+    x = linspace(0,100,1000);
+    size(x)
+    evaluada = eval(funcion);
+    size(evaluada)
+    plot(evaluada)
+    title(handles.otra,'Audio Otra');
+    xlabel(handles.otra,'Tiempo (ms)');
+    ylabel(handles.otra,'Amplitud');
+    %
+    convolucion = conv(voz, evaluada, 'full');
+    Fs=r.SampleRate;
+    Ts=1/Fs;
+    tam = length(convolucion);
+    t=(0:tam-1)*Ts;
+    stem(handles.modificada,t,convolucion);
+    title(handles.modificada,'Audio Convolucion');
+    xlabel(handles.modificada,'Tiempo (segundos)');
+    ylabel(handles.modificada,'Amplitud');
+    tiem=tam/Fs;
+    FsD=tam/tiem;
+    sound(convolucion,FsD);
+end
+
+
+
+function funcion_Callback(hObject, eventdata, handles)
+% hObject    handle to funcion (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of funcion as text
+%        str2double(get(hObject,'String')) returns contents of funcion as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function funcion_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to funcion (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
